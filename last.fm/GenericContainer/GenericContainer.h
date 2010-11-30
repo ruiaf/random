@@ -9,29 +9,61 @@ template <class T>
 class GenericContainer {
 
     public:
+	// constructer of a GenericContainer
     GenericContainer();
+
+	// distructer of a GenericContainer
     ~GenericContainer();
 
+	// returns true if container is empty false otherwise
     bool is_empty() const;
+
+	// returns the number of elements in the container
     int size() const;
+
+	// returns true if an element exists in the container
     bool exists(const T& element) const;
 
+	// insert an element in the container at a specified position
+	// the element is inserted at the first position if none specified
+	// first position is 0 last position is the size()
+	// if asked to insert an element out of bounds gives an assert error
     void insert(const T& element, int position);
+
+	// remove the element at a certain position
+	// if asked to remove an element out of bounds gives an assert error
 	void remove(int position);
+
+	// removes the first occurrence of an element
+	// returns true if it was removed, false otherwise
 	bool remove_element(const T& element);
+
+	// returns the element at a certain position
+	bool get_element(int position);
 
     private:
 
+	// the nodes on the linked list used to store the elements in the container
     class ContainerNode {
 		public:
 
+		// a copy of the element
 		T element;
+
+		// a pointer to the next element
         ContainerNode *next;
+
+		// a pointer to the previous element
         ContainerNode *previous;
     };
 
+	// a counter of the number of elements in the container
     int n_elements;
+
+	// a pointer to the first (dummy) element of the linked list
     ContainerNode *head;
+
+	// a pointer to the last (dummy) element of the linked list
     ContainerNode *tail;
 };
 
@@ -58,6 +90,7 @@ template <class T> GenericContainer<T>::GenericContainer() {
 template <class T> GenericContainer<T>::~GenericContainer() {
 	ContainerNode *n=head->next;
 
+	// delete all the elements
 	while (n!=tail) {
 		delete n->previous;
 		n=n->next;
@@ -148,6 +181,7 @@ template <class T> bool GenericContainer<T>::remove_element(const T& element) {
 		cur_ele=cur_ele->next;
 	}
 
+	// if we found an occurrence of the element, remove it
 	if (was_found) {
 		cur_ele->previous->next=cur_ele->next;
 		cur_ele->next->previous=cur_ele->previous;
@@ -161,3 +195,19 @@ template <class T> bool GenericContainer<T>::remove_element(const T& element) {
 	return false;
 }
 
+// removes the first occurence of an element in a list
+template <class T> bool GenericContainer<T>::get_element(int position) {
+	ContainerNode *cur_ele=head->next;
+	int i;
+
+	// going through the list to the correct remove position
+	bool was_found=false;
+	i=0;
+	while (i!=position) {
+		i++;
+		cur_ele=cur_ele->next;
+	}
+
+	assert(false);
+	return NULL;
+}

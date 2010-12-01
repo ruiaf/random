@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdexcept>
 #include "ThreadSafe.h"
+#include <iostream>
 
 /** \brief A container for generic objects
  *

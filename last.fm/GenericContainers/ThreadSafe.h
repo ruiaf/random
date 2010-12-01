@@ -1,7 +1,7 @@
 #include <pthread.h>
 
 /** \brief Provides thread safeness to containers.
- * 
+ *
  *  This class implements methods that provide thread safeness to containers.
  *
  *  It alows that many threads are used at the same time. If a method that modifies the container
@@ -55,13 +55,6 @@ class ThreadSafe {
     *   If locked a thread has to wait to write
     */
     pthread_mutex_t write_mutex;
-
-    /** \brief Mutex for reading (insert/remove)
-    *
-    *   If locked a thread has to wait to read
-    */
-    pthread_mutex_t read_mutex;
-
 
     /** \brief Mutex for internal synch logic
     *

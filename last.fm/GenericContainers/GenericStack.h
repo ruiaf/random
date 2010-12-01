@@ -4,12 +4,16 @@ template <class T>
 class GenericStack: private GenericContainer<T> {
 
 	public:
+    // get the element at the top of the stack
 	T& top(void) const;
+
+    // remove the element at the top of the stack
 	void pop(void);
+
+    // push an element to the top of the stack
 	void push(T & element);
 
-	private:
-
+    // TODO: add a method to merge another stack
 };
 
 template <class T>

@@ -4,16 +4,20 @@ template <class T>
 class GenericQueue: private GenericContainer<T> {
 
 	public:
-	T& front(void) const;
+    // get element from the front of the queue
+	T front(void) const;
+
+    // remove element from the top of the queue
 	void pop(void);
-	void push(T & element);
 
-	private:
+    // push an element to the back of the queue
+	void push(const T & element);
 
+    // TODO: add a method to merge a queue
 };
 
 template <class T>
-T& GenericQueue<T>::front() const {
+T GenericQueue<T>::front() const {
 	return this->get_element(0);
 }
 
@@ -23,8 +27,8 @@ void GenericQueue<T>::pop(void) {
 }
 
 template <class T>
-void GenericQueue<T>::push(T& element) {
-	//TODO: custom implementation that doesn't
+void GenericQueue<T>::push(const T& element) {
+	//TODO: do a custom implementation that doesn't
 	//		go arround the list to insert at the end
 	this->insert(element,this->size());
 }

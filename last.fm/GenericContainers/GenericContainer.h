@@ -1,5 +1,6 @@
 #include <utility>
 #include <assert.h>
+#include "ThreadSafe.h"
 
 /*
  * Declaration
@@ -22,7 +23,7 @@ class GenericContainer {
     int size() const;
 
 	// returns true if an element exists in the container
-    bool exists(const T& element) const;
+    bool exists(const T& element);
 
 	// insert an element in the container at a specified position
 	// the element is inserted at the first position if none specified
@@ -39,7 +40,10 @@ class GenericContainer {
 	bool remove_element(const T& element);
 
 	// returns the element at a certain position
-	bool get_element(int position);
+	T get_element(int position);
+
+    // TODO: add a method to merge another container
+    // TODO: add iterators to the container
 
     private:
 
@@ -65,13 +69,18 @@ class GenericContainer {
 
 	// a pointer to the last (dummy) element of the linked list
     ContainerNode *tail;
+
+    // a mutex, if linked with threadunsafe, it does nothing.
+    // otherwise provides thread safeness
+    ThreadSafe mutex;
 };
 
 /*
  * Implementation
  */
 
-template <class T> GenericContainer<T>::GenericContainer() {
+template <class T>
+GenericContainer<T>::GenericContainer() {
 
     n_elements = 0;
 
@@ -87,8 +96,11 @@ template <class T> GenericContainer<T>::GenericContainer() {
 	tail->previous = head;
 }
 
-template <class T> GenericContainer<T>::~GenericContainer() {
-	ContainerNode *n=head->next;
+template <class T>
+GenericContainer<T>::~GenericContainer() {
+	ContainerNode *n;
+    
+    n=head->next;
 
 	// delete all the elements
 	while (n!=tail) {
@@ -98,33 +110,44 @@ template <class T> GenericContainer<T>::~GenericContainer() {
 	delete tail;
 }
 
-template <class T> bool GenericContainer<T>::is_empty() const {
-    return head->next==tail;
+template <class T>
+bool GenericContainer<T>::is_empty() const {
+    return size()==0;
 }
 
-template <class T> int GenericContainer<T>::size() const {
+template <class T>
+int GenericContainer<T>::size() const {
     return n_elements;
 }
 
-template <class T> bool GenericContainer<T>::exists(const T& element) const {
-	ContainerNode *n=head->next;
+template <class T>
+bool GenericContainer<T>::exists(const T& element) {
+	ContainerNode *n;
+    
+    mutex.lock_write();
+    n=head->next;
 
 	while (n!=tail) {
 		if (n->element==element)
 			return true;
 		n=n->next;
 	}
+    mutex.unlock_write();
 
 	return false;
 }
 
-template <class T> void GenericContainer<T>::insert(const T & element, int position=0) {
+template <class T>
+void GenericContainer<T>::insert(const T & element, int position=0) {
 	int i=0;
-	ContainerNode *cur_ele=head;
+	ContainerNode *cur_ele;
 
 	// check if the position where to insert is within the bounds of the list
-	assert(position>=0);
-	assert(position<=n_elements);
+    // TODO: throw an exception instead
+	assert(position<=n_elements && position>=0);
+
+    mutex.lock_readwrite();
+    cur_ele=head;
 
 	// update element count
 	this->n_elements++;
@@ -144,14 +167,21 @@ template <class T> void GenericContainer<T>::insert(const T & element, int posit
 
 	cur_ele->next = new_ele;
 	next_ele->previous = new_ele;
+
+    mutex.unlock_readwrite();
 }
 
-template <class T> void GenericContainer<T>::remove(int position=0) {
+template <class T>
+void GenericContainer<T>::remove(int position=0) {
 	int i=0;
-	ContainerNode *cur_ele=head->next;
+	ContainerNode *cur_ele;
 
 	// check if the position where to remove is within the bounds of the list
-	assert(position<=n_elements && position>=0);
+    // TODO: throw an exception instead
+	assert(position<n_elements && position>=0);
+
+    mutex.lock_readwrite();
+    cur_ele=head->next;
 
 	// going through the list to the correct remove position
 	while (i<position) {
@@ -165,11 +195,17 @@ template <class T> void GenericContainer<T>::remove(int position=0) {
 
 	// update element count
 	n_elements=n_elements-1;
+    mutex.unlock_readwrite();
+
 }
 
 // removes the first occurence of an element in a list
-template <class T> bool GenericContainer<T>::remove_element(const T& element) {
-	ContainerNode *cur_ele=head->next;
+template <class T>
+bool GenericContainer<T>::remove_element(const T& element) {
+	ContainerNode *cur_ele;
+
+    mutex.lock_readwrite();
+    cur_ele=head->next;
 
 	// going through the list to the correct remove position
 	bool was_found=false;
@@ -189,17 +225,24 @@ template <class T> bool GenericContainer<T>::remove_element(const T& element) {
 
 		// update element count
 		n_elements--;
-		return true;
 	}
 
-	return false;
+    mutex.unlock_readwrite();
+	return was_found;
 }
 
-// removes the first occurence of an element in a list
-template <class T> bool GenericContainer<T>::get_element(int position) {
-	ContainerNode *cur_ele=head->next;
+// gets an element at a certain position of the list
+template <class T>
+T GenericContainer<T>::get_element(int position) {
+	ContainerNode *cur_ele;
 	int i;
 
+	// check if the position of the element is within the bounds of the list
+    // TODO: throw an exception instead
+	assert(position<=n_elements && position>=0);
+    cur_ele = head->next;
+
+    mutex.lock_write();
 	// going through the list to the correct remove position
 	bool was_found=false;
 	i=0;
@@ -207,7 +250,8 @@ template <class T> bool GenericContainer<T>::get_element(int position) {
 		i++;
 		cur_ele=cur_ele->next;
 	}
+    T element=cur_ele->element;
+    mutex.unlock_write();
 
-	assert(false);
-	return NULL;
+	return element;
 }

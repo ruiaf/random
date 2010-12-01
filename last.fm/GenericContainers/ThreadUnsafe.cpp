@@ -4,11 +4,6 @@ ThreadSafe::ThreadSafe() {
 
 }
 
-ThreadSafe::~ThreadSafe() {
-
-}
-
-
 void ThreadSafe::lock_write() {
 }
 

@@ -1,17 +1,54 @@
 #include "GenericContainer.h"
 
+/** \brief A queue for generic objects
+ * 
+ *  This class implements a queue for generic objects using the doubly-linked list in Generic Container.
+ *
+ *  If this is linked with ThreadSafe.cpp, it becomes thread safe and supports concurrent
+ *  reading of the elements of the container. When writing, it makes sure that no other thread
+ *  is reading or writing concurrently
+ */
+
 template <class T>
 class GenericQueue: private GenericContainer<T> {
 
 	public:
-    // get element from the front of the queue
+    /** \brief Get element at the front of the queue
+    *
+    *   This method reuses the get_element method implemented in GenericContainer
+    *   This method takes O(1) time
+    *   @return Returns a copy of the element at the front of the queue
+    */
 	T front(void) const;
 
-    // remove element from the top of the queue
+    /** \brief Remove element at the front of the queue
+    *
+    *   This method reuses the remove method implemented in GenericContainer
+    *
+    *   This method takes O(1) time
+    */
 	void pop(void);
 
-    // push an element to the back of the queue
+    /** \brief Push an element to the back of the queue
+    *
+    *   This method implement a insert from the back of the linked list method
+    *   in order to be more efficient.
+    *
+    *   This method takes O(1) time
+    */
 	void push(const T & element);
+
+    /** \brief Exposing private parent is_empty method
+    */
+    using GenericContainer<T>::is_empty;
+
+    /** \brief Exposing private parent size method
+    */
+    using GenericContainer<T>::size;
+
+    /** \brief Exposing private parent exists method
+    */
+    using GenericContainer<T>::exists;
 
     // TODO: add a method to merge a queue
 };

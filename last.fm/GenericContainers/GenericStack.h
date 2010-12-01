@@ -1,7 +1,7 @@
 #include "GenericContainer.h"
 
 /** \brief A stack for generic objects
- * 
+ *
  *  This class implements a stack for generic objects using the doubly-linked list in Generic Container.
  *
  *  If this is linked with ThreadSafe.cpp, it becomes thread safe and supports concurrent
@@ -19,14 +19,14 @@ class GenericStack: private GenericContainer<T> {
     *   This method takes O(1) time
     *   @return Returns a copy of the element at the front of the queue
     */
-	T& top(void) const;
+	T top(void) throw (std::out_of_range);
 
     /** \brief Remove element at the top of the stack
     *
     *   This method reuses the get_element method implemented in GenericContainer
     *   This method takes O(1) time
     */
-	void pop(void);
+	void pop(void) throw (std::out_of_range);
 
     /** \brief Push an element to the top of the stack
     *
@@ -52,16 +52,16 @@ class GenericStack: private GenericContainer<T> {
 };
 
 template <class T>
-T& GenericStack<T>::top() const {
-	return this->get_element(0);
+T GenericStack<T>::top() throw (std::out_of_range) {
+	return GenericContainer<T>::get_element(0);
 }
 
 template <class T>
-void GenericStack<T>::pop(void) {
-	this->remove(0);
+void GenericStack<T>::pop(void)  throw (std::out_of_range) {
+	GenericContainer<T>::remove(0);
 }
 
 template <class T>
 void GenericStack<T>::push(T& element) {
-	this->insert(element,0);
+	insert(element,0);
 }

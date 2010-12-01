@@ -1,7 +1,7 @@
 #include "GenericContainer.h"
 
 /** \brief A queue for generic objects
- * 
+ *
  *  This class implements a queue for generic objects using the doubly-linked list in Generic Container.
  *
  *  If this is linked with ThreadSafe.cpp, it becomes thread safe and supports concurrent
@@ -19,7 +19,7 @@ class GenericQueue: private GenericContainer<T> {
     *   This method takes O(1) time
     *   @return Returns a copy of the element at the front of the queue
     */
-	T front(void) const;
+	T front(void) throw (std::out_of_range);
 
     /** \brief Remove element at the front of the queue
     *
@@ -27,7 +27,7 @@ class GenericQueue: private GenericContainer<T> {
     *
     *   This method takes O(1) time
     */
-	void pop(void);
+	void pop(void) throw (std::out_of_range);
 
     /** \brief Push an element to the back of the queue
     *
@@ -54,13 +54,13 @@ class GenericQueue: private GenericContainer<T> {
 };
 
 template <class T>
-T GenericQueue<T>::front() const {
-	return this->get_element(0);
+T GenericQueue<T>::front() throw (std::out_of_range) {
+	return GenericContainer<T>::get_element(0);
 }
 
 template <class T>
-void GenericQueue<T>::pop(void) {
-	this->remove(0);
+void GenericQueue<T>::pop(void) throw (std::out_of_range) {
+	GenericContainer<T>::remove(0);
 }
 
 template <class T>

@@ -4,7 +4,7 @@
 #include "ThreadSafe.h"
 
 /** \brief A container for generic objects
- * 
+ *
  *  This class implements a container for generic objects using doubly-linked lists.
  *
  *  A copy of the elements inserted is kept in memory.
@@ -19,13 +19,13 @@ class GenericContainer {
 
     public:
     /** \brief Create a GenericContainer
-	* 
+	*
     * Initialization of internal variables
     */
     GenericContainer();
 
     /** \brief Destroy a GenericContainer
-	* 
+	*
     * Frees objects alocated in the container
     */
     ~GenericContainer();
@@ -52,7 +52,7 @@ class GenericContainer {
     bool exists(const T& element);
 
 	/** \brief Insert an element at a specified position of the container
-    * 
+    *
     * Insert an element in the container at a specified position. A Copy of the element is
     * performed
     *
@@ -65,12 +65,12 @@ class GenericContainer {
     * This method takes O(1) time for inserting at left of the linked list
     *
     * @param element The element to insert in the container
-    * @param position The position where to insert the element 
+    * @param position The position where to insert the element
     */
     void insert(const T& element, int position) throw(std::out_of_range);
 
 	/** \brief Remove the element at a specified position of the container
-    * 
+    *
     * Positions start counting from 0.
     *
 	* When asked to remove an element out of bounds gives an assert error.
@@ -83,14 +83,14 @@ class GenericContainer {
 	void remove(int position) throw(std::out_of_range);
 
 	/** \brief Remove the first occurence of an element
-    * 
+    *
     * @param element The element to remove
     * @return True if removed an element, False otherwise
     */
 	bool remove_element(const T& element);
 
 	/** \brief Retrieve the element at a certain position of the container
-    * 
+    *
 	* When asked to remove an element out of bounds gives an assert error.
     *
     * @param position The position of the element to return
@@ -113,7 +113,7 @@ class GenericContainer {
 		public:
 
         /** \brief  The copy of the element inserted in the container
-        *   
+        *
         *   This is the only copy of the element in the container.
         */
 		T element;
@@ -175,8 +175,6 @@ GenericContainer<T>::GenericContainer() {
 	// when inserting/removing at the endpoints
 	head = new ContainerNode();
 	tail = new ContainerNode();
-	head->element = NULL;
-	tail->element = NULL;
 	head->previous = NULL;
 	tail->next = NULL;
 	head->next = tail;
@@ -186,7 +184,7 @@ GenericContainer<T>::GenericContainer() {
 template <class T>
 GenericContainer<T>::~GenericContainer() {
 	ContainerNode *n;
-    
+
     n=head->next;
 
 	// delete all the elements
@@ -210,7 +208,7 @@ int GenericContainer<T>::size() const {
 template <class T>
 bool GenericContainer<T>::exists(const T& element) {
 	ContainerNode *n;
-    
+
     // do not allow insertion/removal of elements while searching
     mutex.lock_write();
     n=head->next;
@@ -336,7 +334,6 @@ T GenericContainer<T>::get_element(int position) throw (std::out_of_range) {
     cur_ele = head->next;
 
 	// going through the list to the correct remove position
-	bool was_found=false;
 	i=0;
 	while (i!=position) {
 		i++;

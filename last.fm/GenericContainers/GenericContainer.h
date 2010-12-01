@@ -1,5 +1,6 @@
 #include <utility>
 #include <assert.h>
+#include <stdexcept>
 #include "ThreadSafe.h"
 
 /** \brief A container for generic objects
@@ -66,7 +67,7 @@ class GenericContainer {
     * @param element The element to insert in the container
     * @param position The position where to insert the element 
     */
-    void insert(const T& element, int position);
+    void insert(const T& element, int position) throw(std::out_of_range);
 
 	/** \brief Remove the element at a specified position of the container
     * 
@@ -79,7 +80,7 @@ class GenericContainer {
     *
     * @param position The position where the element to remove is
     */
-	void remove(int position);
+	void remove(int position) throw(std::out_of_range);
 
 	/** \brief Remove the first occurence of an element
     * 
@@ -95,7 +96,7 @@ class GenericContainer {
     * @param position The position of the element to return
     * @return The element at the specified position
     */
-	T get_element(int position);
+	T get_element(int position) throw(std::out_of_range);
 
     // TODO: add a method to merge another container
     // TODO: add iterators to the container
@@ -225,13 +226,13 @@ bool GenericContainer<T>::exists(const T& element) {
 }
 
 template <class T>
-void GenericContainer<T>::insert(const T & element, int position=0) {
+void GenericContainer<T>::insert(const T & element, int position=0) throw (std::out_of_range) {
 	int i=0;
 	ContainerNode *cur_ele;
 
 	// check if the position where to insert is within the bounds of the list
-    // TODO: throw an exception instead
-	assert(position<=n_elements && position>=0);
+	if (position>n_elements || position<0)
+        throw std::out_of_range ("Out of bounds insertion in the container");
 
     mutex.lock_readwrite();
     cur_ele=head;
@@ -259,13 +260,13 @@ void GenericContainer<T>::insert(const T & element, int position=0) {
 }
 
 template <class T>
-void GenericContainer<T>::remove(int position=0) {
+void GenericContainer<T>::remove(int position=0) throw (std::out_of_range) {
 	int i=0;
 	ContainerNode *cur_ele;
 
 	// check if the position where to remove is within the bounds of the list
-    // TODO: throw an exception instead
-	assert(position<n_elements && position>=0);
+	if (position>=n_elements || position<0)
+        throw std::out_of_range ("Out of bounds removal of element");
 
     mutex.lock_readwrite();
     cur_ele=head->next;
@@ -321,17 +322,19 @@ bool GenericContainer<T>::remove_element(const T& element) {
 
 // gets an element at a certain position of the list
 template <class T>
-T GenericContainer<T>::get_element(int position) {
+T GenericContainer<T>::get_element(int position) throw (std::out_of_range) {
 	ContainerNode *cur_ele;
 	int i;
 
 	// check if the position of the element is within the bounds of the list
-    // TODO: throw an exception instead
-	assert(position<=n_elements && position>=0);
+	if (position>=n_elements || position<0)
+        throw std::out_of_range ("Out of bounds position of element");
+
+    // do not allow insertion / removal concurrently while getting element
+    mutex.lock_write();
+
     cur_ele = head->next;
 
-    // do not allow insertion / removal concurrently
-    mutex.lock_write();
 	// going through the list to the correct remove position
 	bool was_found=false;
 	i=0;

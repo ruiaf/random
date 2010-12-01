@@ -4,8 +4,9 @@
  * 
  *  This class implements methods that provide thread safeness to containers.
  *
- *  It alows that many elements are used at the same time. If a method that modifies the container
+ *  It alows that many threads are used at the same time. If a method that modifies the container
  *  is used, i.e. insert/remove, it guaranties that no other thread is reading or writing
+ *  Read operations. i.e. get_element, can be used concurrently
  *
  *  If this is linked with ThreadSafe.cpp, it enables thread safeness and supports concurrent
  *  reading of the elements of the container.

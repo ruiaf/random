@@ -1,16 +1,18 @@
 #include <assert.h>
 #include <stdexcept>
-#include "GenericContainer.h"
+#include "../src/GenericContainer.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
+/** \brief test insertion and removal of elements
+ */
 void insert_remove_string_test(void) {
-    GenericContainer<string> mystrings;
+	GenericContainer<string> mystrings;
 
-    assert(mystrings.is_empty());
-    assert(mystrings.size()==0);
+	assert(mystrings.is_empty());
+	assert(mystrings.size()==0);
 
 	mystrings.insert("hello",0);
 	assert(mystrings.exists("hello")==true);
@@ -18,8 +20,8 @@ void insert_remove_string_test(void) {
 	mystrings.remove(0);
 	assert(mystrings.exists("hello")==false);
 
-    assert(mystrings.is_empty());
-    assert(mystrings.size()==0);
+	assert(mystrings.is_empty());
+	assert(mystrings.size()==0);
 
 	mystrings.insert("hello",0);
 	mystrings.insert("goodbye",0);
@@ -28,12 +30,14 @@ void insert_remove_string_test(void) {
 	mystrings.remove(0);
 	assert(mystrings.exists("hello")==true);
 
-    assert(mystrings.is_empty()==false);
-    assert(mystrings.size()==1);
+	assert(mystrings.is_empty()==false);
+	assert(mystrings.size()==1);
 }
 
+/** \brief Test exceptions thrown for access of out of bounds elements
+ */
 void out_of_bounds_test(void) {
-    GenericContainer<string> mystrings;
+	GenericContainer<string> mystrings;
 	bool flag;
 
 	flag=false;
@@ -73,20 +77,22 @@ void out_of_bounds_test(void) {
 	assert(mystrings.get_element(0)=="hello");
 }
 
+/** \brief Test mixed operations
+ */
 void multiple_operations_int_test(void) {
-    GenericContainer<int> myintegers;
+	GenericContainer<int> myintegers;
 
-    assert(myintegers.is_empty());
-    assert(myintegers.size()==0);
+	assert(myintegers.is_empty());
+	assert(myintegers.size()==0);
 
 	myintegers.insert(10,0);
-    assert(myintegers.size()==1);
+	assert(myintegers.size()==1);
 	myintegers.insert(20,1);
-    assert(myintegers.size()==2);
+	assert(myintegers.size()==2);
 	myintegers.insert(10,2);
 	myintegers.insert(40,3);
 	myintegers.insert(10,4);
-    assert(myintegers.size()==5);
+	assert(myintegers.size()==5);
 	assert(myintegers.exists(20)==true);
 	myintegers.remove(1);
 	assert(myintegers.exists(20)==false);
@@ -101,12 +107,14 @@ void multiple_operations_int_test(void) {
 	myintegers.remove(0);
 	myintegers.remove(0);
 	myintegers.remove(0);
-    assert(myintegers.is_empty());
+	assert(myintegers.is_empty());
 	assert(myintegers.size()==0);
 }
 
+/** \brief Test the insertion of elements
+ */
 void lots_of_inserts_test(void) {
-    GenericContainer<int> myintegers;
+	GenericContainer<int> myintegers;
 
 	for (int i=9999;i>=0;i--) {
 		myintegers.insert(i,0);
@@ -121,9 +129,13 @@ void lots_of_inserts_test(void) {
 	}
 }
 
+/** \brief Runs the unit tests for GenericContainer
+ */
 int main(void) {
+	cout << "Testing GenericContainer\t";
 	insert_remove_string_test();
 	out_of_bounds_test();
 	multiple_operations_int_test();
 	lots_of_inserts_test();
+	cout << "OK\n";
 }

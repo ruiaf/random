@@ -1,12 +1,15 @@
 #include <assert.h>
 #include <stdexcept>
-#include "GenericContainer.h"
+#include "../src/GenericContainer.h"
 #include <iostream>
 #include <pthread.h>
 
 #define N_THREADS 50
 #define N_INSERTS 1000
 
+/** \brief The thread that insert, accesses and removes elements
+ *
+ */
 void *insert_remove_run(void *data) {
 	GenericContainer<int> *myints;
 
@@ -23,7 +26,12 @@ void *insert_remove_run(void *data) {
 	return NULL;
 }
 
-// start 10 threads that do 1000 inserts and 1000 removes each
+/** \brief Test concurrent insertion, access and removal of elements
+ *
+ *	Start several threads that insert many elements
+ *	then access the same number of elements
+ *	and then remove the same number of elements inserted
+ */
 void test_insert_remove() {
 	pthread_t threads[N_THREADS];
 	GenericContainer<int> myints;
@@ -41,6 +49,9 @@ void test_insert_remove() {
 
 }
 
+/** \brief The thread that insert and removes elements
+ *
+ */
 void *insert_access_remove_run(void *data) {
 	GenericContainer<int> *myints;
 
@@ -61,7 +72,11 @@ void *insert_access_remove_run(void *data) {
 	return NULL;
 }
 
-// start 10 threads that do 1000 inserts and read 1000 elements and removes 1000
+/** \brief Test concurrent insertion and removal of elements
+ *
+ *	Start several threads that insert many elements
+ *	and then remove the same number of elements inserted
+ */
 void test_insert_access_remove() {
 	pthread_t threads[N_THREADS];
 	GenericContainer<int> myints;
@@ -78,7 +93,15 @@ void test_insert_access_remove() {
     assert(myints.size()==0);
 
 }
+
+/** \brief Runs the unit tests for GenericContainer
+ *
+ *	As all the multi-threading logic is in the GenericContainer there is
+ *	no need to test the queue and the stack
+ */
 int main(void) {
+	std::cout << "Testing GenericStack\t";
 	test_insert_remove();
 	test_insert_access_remove();
+	std::cout << "\tOK\n";
 }

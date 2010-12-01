@@ -1,11 +1,15 @@
 #include <assert.h>
 #include <stdexcept>
-#include "GenericStack.h"
+#include "../src/GenericStack.h"
 #include <iostream>
 #include <string>
 
 using namespace std;
 
+/** \brief Test the order elements come out of the queue.
+  *
+  * Make sure of LIFO
+  */
 void order_test(void) {
     GenericStack<int> mystack;
 
@@ -20,8 +24,13 @@ void order_test(void) {
 	}
 }
 
+/** \brief Runs the unit tests for GenericStack
+ *
+ *	As the stack heavily reuses code from GenericContainer
+ *	the only thing left to test is the order of the elements
+ */
 int main(void) {
-	// most tests are done in the container unit test
-	// lets just test the order
+	cout << "Testing GenericStack\t";
 	order_test();
+	cout << "\tOK\n";
 }

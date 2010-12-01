@@ -1,26 +1,21 @@
 all: unittestGenericContainer unittestGenericQueue unittestGenericStack unittestMultiThreaded
 
-unittestGenericContainer: ThreadUnsafe.o
+unittestGenericContainer:
 	g++ -ansi -Wall -c -o unittestGenericContainer.o unittestGenericContainer.cpp
-	g++ -ansi -Wall -o unittestGenericContainer unittestGenericContainer.o ThreadUnsafe.o
+	g++ -ansi -Wall -o unittestGenericContainer unittestGenericContainer.o ../src/ThreadUnsafe.o
 
-unittestGenericQueue: ThreadUnsafe.o
+unittestGenericQueue:
 	g++ -ansi -Wall -c -o unittestGenericQueue.o unittestGenericQueue.cpp
-	g++ -ansi -Wall -o unittestGenericQueue unittestGenericQueue.o ThreadUnsafe.o
+	g++ -ansi -Wall -o unittestGenericQueue unittestGenericQueue.o ../src/ThreadUnsafe.o
 
-unittestGenericStack: ThreadUnsafe.o
+unittestGenericStack:
 	g++ -ansi -Wall -c -o unittestGenericStack.o unittestGenericStack.cpp
-	g++ -ansi -Wall -o unittestGenericStack unittestGenericStack.o ThreadUnsafe.o
+	g++ -ansi -Wall -o unittestGenericStack unittestGenericStack.o ../src/ThreadUnsafe.o
 
-unittestMultiThreaded: ThreadSafe.o
+unittestMultiThreaded:
 	g++ -ansi -Wall -c -o unittestMultiThreaded.o unittestMultiThreaded.cpp
-	g++ -ansi -Wall -lpthread -o unittestMultiThreaded unittestMultiThreaded.o ThreadSafe.o
-
-ThreadSafe.o: ThreadSafe.cpp
-	g++ -ansi -Wall -c -o ThreadSafe.o ThreadSafe.cpp
-
-ThreadUnsafe.o: ThreadUnsafe.cpp
-	g++ -ansi -Wall -c -o ThreadUnsafe.o ThreadUnsafe.cpp
+	g++ -ansi -Wall -lpthread -o unittestMultiThreaded unittestMultiThreaded.o ../src/ThreadSafe.o
 
 clean: 
+	rm unittestGenericContainer unittestGenericQueue unittestGenericStack unittestMultiThreaded
 	rm *.o
